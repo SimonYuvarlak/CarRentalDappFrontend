@@ -1,6 +1,7 @@
 // Css
 import "./App.css";
 // Local Components
+import bgImg from "./assets/background.jpg";
 import InfoBox from "./components/InfoBox";
 import TopLabel from "./components/TopLabel";
 import Status from "./components/Status";
@@ -99,15 +100,21 @@ function App() {
 
   // 1, "Audi", "https://images.pexels.com/photos/1402787/pexels-photo-1402787.jpeg", 100000,  1000000000000
   const add_car = () => {
-    addCar(1, "Audi", "https://images.pexels.com/photos/1402787/pexels-photo-1402787.jpeg", 100000000000000, 100000000000000);
-  }
+    addCar(
+      1,
+      "Audi",
+      "https://images.pexels.com/photos/1402787/pexels-photo-1402787.jpeg",
+      100000000000000,
+      100000000000000
+    );
+  };
 
   const emptyAddress = "0x0000000000000000000000000000000000000000";
 
   useEffect(() => {
     const handleInit = async () => {
       let isAUser = await login();
-      console.warn(isAUser)
+      console.warn(isAUser);
       if (isAUser.address != emptyAddress) {
         setLoggedIn(true);
         setUserInfo({
@@ -128,7 +135,7 @@ function App() {
       let carArray = await getAllCars();
       setCars(carArray);
       console.log(`user credits ${userInfo.balance}`);
-      setUserCredit(Web3.utils.fromWei(String(userInfo.balance), 'ether'));
+      setUserCredit(Web3.utils.fromWei(String(userInfo.balance), "ether"));
     };
 
     handleInit();
@@ -145,7 +152,7 @@ function App() {
   };
 
   return (
-    <div className="h-full  bg-[url('https://img.freepik.com/free-vector/gradient-cyber-futuristic-background_23-2149117429.jpg?w=1380&t=st=1679801070~exp=1679801670~hmac=3f3ac00783fdf3f4fcdfd32442f116250b809a1b3bb0f74f2777c4ba08f82609')] bg-cover bg-center  bg-no-repeat ">
+    <div className="h-full bg-[url('./assets/background.jpg')]  bg-cover bg-center  bg-no-repeat ">
       {/* Header */}
       <Header loggedIn={loggedIn} />
       {/* Title */}
@@ -158,7 +165,9 @@ function App() {
             {isAdmin && (
               <GradientButton
                 // onClick={() => setShowModal(true)}
-                onClick={() => {add_car()}}
+                onClick={() => {
+                  add_car();
+                }}
                 title="Admin Actions"
               />
             )}
@@ -178,19 +187,19 @@ function App() {
                   number="0"
                   icon={<BiTimeFive />}
                 />
-                <div className="w-">
+                <div className="grid place-items-center">
                   <Status status="Available" />
                 </div>
               </div>
             </div>
           </div>
           {/* Input Section */}
-          <div className="place-content-center md:grid-flow-col grid items-center p-4 mt-12">
-            <DueComponent label="Pay your due" />
+          <div className="place-content-center  grid items-center p-4 mt-12">
             <InputComponent
               holder=" Credit balance"
               label="Credit your account"
             />
+            <DueComponent label="Pay your due" />
           </div>
           {/* Car Section */}
           <div className="grid md:grid-flow-col gap-4 gap-y-12 justify-evenly mt-24 pb-24">
@@ -227,14 +236,14 @@ function App() {
               <h3 className="text-center mt-4">
                 Enter your Address key to Login or Register
               </h3>
-              <div className="grid mb-8 grid-flow-row">
+              <div className="grid mb-8 mt-4 grid-flow-row">
                 <input
-                  className="p-2 md:w-[20vw] mb-4 text-black rounded-md"
+                  className="p-2 mb-4 text-black rounded-md"
                   placeholder="Enter your Name"
                   onChange={handleNameChange}
                 />
                 <input
-                  className="p-2 md:w-[20vw] mb-4 text-black rounded-md"
+                  className="p-2 mb-4 text-black rounded-md"
                   placeholder="Enter your Surname"
                   onChange={handleLastNameChange}
                 />
