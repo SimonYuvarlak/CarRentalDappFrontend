@@ -1,10 +1,10 @@
 import Web3 from "web3";
-import RenterABI from "./ABI/Renter.json";
+import RenterABI from "./ABI/RentalPlatform.json";
 
 let selectedAccount;
 let renterContract;
 let isInitialized = false;
-let renterContractAddress = "0x61F680a0b1C5433b03F782d42e4bdFaE1830F76a";
+let renterContractAddress = "0x447F746d1c13890ae3210f608426829556cB956d";
 
 export const init = async () => {
     // Configure contract
@@ -45,11 +45,11 @@ export const getUserAddress = async() => {
 
 // Execute Functions
 
-export const register = async () => {
+export const register = async (name, surname) => {
     if (!isInitialized) {
         await init();
     }
-    let res = await renterContract.methods.Register(selectedAccount, "Arman", "Yuvarlak").send( {from: selectedAccount} );
+    let res = await renterContract.methods.addUser(selectedAccount, name, surname).send( {from: selectedAccount} );
     console.log(res);
     return res;
 }
@@ -94,7 +94,7 @@ export const deActivateCar = async (id) => {
     if (!isInitialized) {
         await init();
     }
-    let res = await renterContract.methods.Register(selectedAccount, id).send( {from: selectedAccount} );
+    let res = await renterContract.methods.deActivateCar(id).send( {from: selectedAccount} );
     console.log(res);
     return res;
 }
@@ -118,47 +118,11 @@ export const makePayment = async () => {
     return res;
 }
 
-export const setCarManagerAddress = async (newCarManagerAddress) => {
-    if (!isInitialized) {
-        await init();
-    }
-    let res = await renterContract.methods.setCarManagerAddress(newCarManagerAddress).send( {from: selectedAccount} );
-    console.log(res);
-    return res;
-}
-
-export const setCarManagerOwner = async (newCarManagerOwner) => {
-    if (!isInitialized) {
-        await init();
-    }
-    let res = await renterContract.methods.setCarManagerOwner(newCarManagerOwner).send( {from: selectedAccount} );
-    console.log(res);
-    return res;
-}
-
 export const setOwner = async (newOwner) => {
     if (!isInitialized) {
         await init();
     }
-    let res = await renterContract.methods.setOwner("0x036139E1f57b7bB3a759b4527B005b7477780dF0".toLowerCase()).send( {from: selectedAccount} );
-    console.log(res);
-    return res;
-}
-
-export const setUserManagerAddress = async (newUserManagerAddress) => {
-    if (!isInitialized) {
-        await init();
-    }
-    let res = await renterContract.methods.setUserManagerAddress(newUserManagerAddress).send( {from: selectedAccount} );
-    console.log(res);
-    return res;
-}
-
-export const setUserManagerOwner = async (newUserManagerOwner) => {
-    if (!isInitialized) {
-        await init();
-    }
-    let res = await renterContract.methods.setUserManagerOwner(newUserManagerOwner).send( {from: selectedAccount} );
+    let res = await renterContract.methods.setOwner(newOwner.toLowerCase()).send( {from: selectedAccount} );
     console.log(res);
     return res;
 }
@@ -169,7 +133,7 @@ export const getAllCars = async () => {
     if (!isInitialized) {
         await init();
     }
-    let res = await renterContract.methods.getAllCars().call();
+    let res = await renterContract.methods.getCarIds().call();
     console.log(res);
     return res;
 }
@@ -201,20 +165,20 @@ export const getUserBalance = async () => {
     return res;
 }
 
-export const getUserDebt = async () => {
+export const getUser = async () => {
     if (!isInitialized) {
         await init();
     }
-    let res = await renterContract.methods.getUserDept(selectedAccount).call();
+    let res = await renterContract.methods.getUser(selectedAccount).call();
     console.log(res);
     return res;
 }
 
-export const getUserManager = async () => {
+export const getUserDebt = async () => {
     if (!isInitialized) {
         await init();
     }
-    let res = await renterContract.methods.getUserManager().call();
+    let res = await renterContract.methods.getUserDebt(selectedAccount).call();
     console.log(res);
     return res;
 }
@@ -234,14 +198,14 @@ export const getOwner = async () => {
     }
     let res = await renterContract.methods.getOwner().call();
     console.log(res);
-    return String(res);
+    return res.toString();
 }
 
 export const login = async () => {
     if (!isInitialized) {
         await init();
     }
-    let res = await renterContract.methods.Login(selectedAccount).call();
+    let res = await renterContract.methods.isUser(selectedAccount).call();
     console.log(res);
     return res;
 }

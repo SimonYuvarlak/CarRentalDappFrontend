@@ -44,7 +44,6 @@ import car3 from "./assets/car3.jpg";
 import { BiWalletAlt, BiTimeFive } from "react-icons/bi";
 import { GiToken } from "react-icons/gi";
 import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
 import Web3 from "web3";
 
 const DUMMY_CARS = [
