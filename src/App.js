@@ -95,25 +95,14 @@ function App() {
   const [lastName, setLastName] = useState({});
   const [isAdmin, setIsAdmin] = useState(false);
   const [userCredit, setUserCredit] = useState(0);
+  const [due, setDue] = useState(0);
   // const [car, setCar] = useState({ id: 0, name: '', imgUrl: '', availableforRent: false, rentFee: 0, saleFee: 0 });
-
-  // 1, "Audi", "https://images.pexels.com/photos/1402787/pexels-photo-1402787.jpeg", 100000,  1000000000000
-  const add_car = () => {
-    addCar(
-      1,
-      "Audi",
-      "https://images.pexels.com/photos/1402787/pexels-photo-1402787.jpeg",
-      100000000000000,
-      100000000000000
-    );
-  };
 
   const emptyAddress = "0x0000000000000000000000000000000000000000";
 
   useEffect(() => {
     const handleInit = async () => {
       let isAUser = await login();
-      let userCredit = 0;
       console.warn(isAUser);
       if (isAUser.address != emptyAddress) {
         setLoggedIn(true);
@@ -122,21 +111,21 @@ function App() {
           debt: isAUser.debt,
           rentalTime: isAUser.rentalTime,
         });
-        userCredit = isAUser.balance;
+        setUserCredit(Web3.utils.fromWei(String(isAUser.balance), "ether"));
+        setDue(Web3.utils.fromWei(String(isAUser.debt), "ether"));
         setUserName(isAUser.name);
         setUser(isAUser);
-
         let address = await getUserAddress();
         let owner = await getOwner();
         console.log(`admin: ${owner} and user ${address}`);
         if (address === owner) {
           setOwner(true);
         }
+        let carArray = await getAllCars();
+        setCars(carArray);
+        // let res = await addCar(1, "Honda", "https://images.pexels.com/photos/7839731/pexels-photo-7839731.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2", 1000000000000000, 1000000000000000);
+        // console.log(res);
       }
-      let carArray = await getAllCars();
-      setCars(carArray);
-      console.log(`user credits ${userInfo.balance}`);
-      setUserCredit(Web3.utils.fromWei(String(userCredit), "ether"));
     };
 
     handleInit();
@@ -149,12 +138,6 @@ function App() {
   const handleLastNameChange = (event) => {
     setLastName(event.target.value);
   };
-
-  const carAddition = async () => {
-    console.log("inside the car addition function");
-    let res = await addCar(1, "Honda", "https://images.pexels.com/photos/7839731/pexels-photo-7839731.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2", 1000000000000000, 1000000000000000);
-    console.log(res);
-  }
 
   return (
     <div className="h-full bg-[url('./assets/background.jpg')]  bg-cover bg-center  bg-no-repeat ">
@@ -171,7 +154,7 @@ function App() {
               <GradientButton
                 // onClick={() => setShowModal(true)}
                 onClick={() => {
-                  add_car();
+                  addCar();
                 }}
                 title="Admin Actions"
               />
@@ -204,7 +187,7 @@ function App() {
               holder=" Credit balance"
               label="Credit your account"
             />
-            <DueComponent label="Pay your due" onClick={() => carAddition()} />
+            <DueComponent label="Pay your due" onClick={() => makePayment()} />
           </div>
           {/* Car Section */}
           <div className="grid md:grid-flow-col gap-4 gap-y-12 justify-evenly mt-24 pb-24">
