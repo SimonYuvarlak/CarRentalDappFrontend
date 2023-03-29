@@ -113,6 +113,7 @@ function App() {
   useEffect(() => {
     const handleInit = async () => {
       let isAUser = await login();
+      let userCredit = 0;
       console.warn(isAUser);
       if (isAUser.address != emptyAddress) {
         setLoggedIn(true);
@@ -121,6 +122,7 @@ function App() {
           debt: isAUser.debt,
           rentalTime: isAUser.rentalTime,
         });
+        userCredit = isAUser.balance;
         setUserName(isAUser.name);
         setUser(isAUser);
 
@@ -134,7 +136,7 @@ function App() {
       let carArray = await getAllCars();
       setCars(carArray);
       console.log(`user credits ${userInfo.balance}`);
-      setUserCredit(Web3.utils.fromWei(String(userInfo.balance), "ether"));
+      setUserCredit(Web3.utils.fromWei(String(userCredit), "ether"));
     };
 
     handleInit();
@@ -147,6 +149,12 @@ function App() {
   const handleLastNameChange = (event) => {
     setLastName(event.target.value);
   };
+
+  const carAddition = async () => {
+    console.log("inside the car addition function");
+    let res = await addCar(1, "Honda", "https://images.pexels.com/photos/7839731/pexels-photo-7839731.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2", 1000000000000000, 1000000000000000);
+    console.log(res);
+  }
 
   return (
     <div className="h-full bg-[url('./assets/background.jpg')]  bg-cover bg-center  bg-no-repeat ">
@@ -196,7 +204,7 @@ function App() {
               holder=" Credit balance"
               label="Credit your account"
             />
-            <DueComponent label="Pay your due" />
+            <DueComponent label="Pay your due" onClick={() => carAddition()} />
           </div>
           {/* Car Section */}
           <div className="grid md:grid-flow-col gap-4 gap-y-12 justify-evenly mt-24 pb-24">
