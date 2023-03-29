@@ -138,8 +138,6 @@ function App() {
     };
 
     handleInit();
-
-    console.log("0x036139E1f57b7bB3a759b4527B005b7477780dF0".toLowerCase());
   }, []);
 
   const handleNameChange = (event) => {

@@ -4,7 +4,7 @@ import RenterABI from "./ABI/RentalPlatform.json";
 let selectedAccount;
 let renterContract;
 let isInitialized = false;
-let renterContractAddress = "0x447F746d1c13890ae3210f608426829556cB956d";
+let renterContractAddress = "0xfBc8b5659510d1f281A863b005cD1b3a0Ca82667";
 
 export const init = async () => {
     // Configure contract
@@ -29,7 +29,7 @@ export const init = async () => {
 
     const web3 = new Web3(provider);
 
-    const networkId = await web3.eth.net.getId();
+    // const networkId = await web3.eth.net.getId();
 
     renterContract = new web3.eth.Contract(RenterABI.abi, renterContractAddress);
 
@@ -205,7 +205,7 @@ export const login = async () => {
     if (!isInitialized) {
         await init();
     }
-    let res = await renterContract.methods.isUser(selectedAccount).call();
+    let res = await renterContract.methods.getUser(selectedAccount).call();
     console.log(res);
     return res;
 }
