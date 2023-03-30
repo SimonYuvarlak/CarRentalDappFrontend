@@ -74,11 +74,6 @@ const DUMMY_CARS = [
 function App() {
   const [showModal, setShowModal] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [userInfo, setUserInfo] = useState({
-    balance: 0,
-    debt: 0,
-    rentalTime: 0,
-  });
   const [userName, setUserName] = useState("");
   const [user, setUser] = useState({
     walletaddress: "",
@@ -96,6 +91,7 @@ function App() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [userCredit, setUserCredit] = useState(0);
   const [due, setDue] = useState(0);
+  const [isAvailable, setIsAvailable] = useState("Can Rent");
   // const [car, setCar] = useState({ id: 0, name: '', imgUrl: '', availableforRent: false, rentFee: 0, saleFee: 0 });
 
   const emptyAddress = "0x0000000000000000000000000000000000000000";
@@ -104,33 +100,39 @@ function App() {
     const handleInit = async () => {
       let isAUser = await login();
       console.warn(isAUser);
+      // If the user exists
       if (isAUser.address != emptyAddress) {
-        setLoggedIn(true);
-        setUserInfo({
-          balance: isAUser.balance,
-          debt: isAUser.debt,
-          rentalTime: isAUser.rentalTime,
-        });
+        setLoggedIn(true); //login user
+        // set user credits
         setUserCredit(Web3.utils.fromWei(String(isAUser.balance), "ether"));
+        // set user due
         setDue(Web3.utils.fromWei(String(isAUser.debt), "ether"));
+        // set user name
         setUserName(isAUser.name);
+        // set the user
         setUser(isAUser);
+        // get the user address
         let address = await getUserAddress();
+        // get the owner
         let owner = await getOwner();
+        // see if the user is the owner
         console.log(`admin: ${owner} and user ${address}`);
         if (address === owner) {
           setOwner(true);
         }
+        // get cars
         let carArray = await getAllCars();
         await getCars(carArray);
-        // let res = await addCar(
-        //   1,
-        //   "Honda",
-        //   "https://images.pexels.com/photos/7839731/pexels-photo-7839731.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-        //   "1000000000000000",
-        //   "1000000000000000"
-        // );
-        // console.log(res);
+        // update user status
+        if (isAUser.rentedCarId != 0) {
+          let rentedCar = await getCar(isAUser.rentedCarId);
+          setIsAvailable(`Rented ${rentedCar.name} - ${rentedCar.id}`);
+        } else {
+          console.log(isAUser.debt);
+          if (isAUser.debt != 0) {
+            setIsAvailable("Pay your due before renting again!");
+          }
+        }
       }
     };
 
@@ -191,14 +193,14 @@ function App() {
                   number={userCredit}
                   icon={<BiWalletAlt />}
                 />
-                <InfoBox label="BNB Due" number="0" icon={<GiToken />} />
+                <InfoBox label="BNB Due" number={due} icon={<GiToken />} />
                 <InfoBox
                   label="Ride Minutes"
                   number="0"
                   icon={<BiTimeFive />}
                 />
                 <div className="grid place-items-center">
-                  <Status status="Available" />
+                  <Status status={isAvailable} />
                 </div>
               </div>
             </div>
