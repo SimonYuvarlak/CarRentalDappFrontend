@@ -122,14 +122,36 @@ function App() {
           setOwner(true);
         }
         let carArray = await getAllCars();
-        setCars(carArray);
-        // let res = await addCar(1, "Honda", "https://images.pexels.com/photos/7839731/pexels-photo-7839731.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2", 1000000000000000, 1000000000000000);
+        await getCars(carArray);
+        // let res = await addCar(
+        //   1,
+        //   "Honda",
+        //   "https://images.pexels.com/photos/7839731/pexels-photo-7839731.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        //   "1000000000000000",
+        //   "1000000000000000"
+        // );
         // console.log(res);
       }
     };
 
     handleInit();
   }, []);
+
+  const getCars = async (cars) => {
+    let carArr = [];
+    cars.forEach(async (element) => {
+      let car = await getCar(element);
+      carArr.push({
+        id: car.id,
+        name: car.name,
+        imgUrl: car.imgUrl,
+        availableForRent: car.availableForRent,
+        rentFee: car.rentFee,
+        saleFee: car.saleFee,
+      });
+      setCars(carArr);
+    });
+  };
 
   const handleNameChange = (event) => {
     setName(event.target.value);
@@ -149,7 +171,7 @@ function App() {
           <div className="mt-12">
             <TopLabel userName={userName} />
           </div>
-          <div className="grid place-content-center mt-8">
+          {/* <div className="grid place-content-center mt-8">
             {isAdmin && (
               <GradientButton
                 // onClick={() => setShowModal(true)}
@@ -159,7 +181,7 @@ function App() {
                 title="Admin Actions"
               />
             )}
-          </div>
+          </div> */}
           {/* Data Section */}
           <div className=" mx-auto grid place-content-center  mt-12">
             <div className="flex flex-row items-center">
@@ -193,12 +215,12 @@ function App() {
           <div className="grid md:grid-flow-col gap-4 gap-y-12 justify-evenly mt-24 pb-24">
             {cars.length > 0
               ? cars.map((car) => (
-                  <div key={car.carId}>
+                  <div key={car.id}>
                     <CarComponent
-                      isActive={car.isActive}
+                      isActive={car.availableForRent}
                       carFee={car.rentFee}
                       saleFee={car.saleFee}
-                      image={car.carImg}
+                      image={car.imgUrl}
                       id={car.id}
                     />
                   </div>
