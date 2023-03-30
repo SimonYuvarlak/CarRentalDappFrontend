@@ -12,6 +12,9 @@ const CarComponent = (props) => {
         quis sem at nibh elementum imperdiet.
       </p>
       <div className="text-white space-y-4 text-xl mt-4">
+        <p>{props.name}</p>
+      </div>
+      <div className="text-white space-y-4 text-xl mt-4">
         <p>Car Fee: {props.carFee / 1000000000000000000} BNB</p>
         <p>Sale Fee: {props.carFee / 10000000000000} BNB</p>
         <p className={props.isActive ? "text-green-500" : "text-red-300"}>

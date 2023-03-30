@@ -92,6 +92,7 @@ function App() {
   const [userCredit, setUserCredit] = useState(0);
   const [due, setDue] = useState(0);
   const [isAvailable, setIsAvailable] = useState("Can Rent");
+  const [rideMins, setRideMins] = useState(0);
   // const [car, setCar] = useState({ id: 0, name: '', imgUrl: '', availableforRent: false, rentFee: 0, saleFee: 0 });
 
   const emptyAddress = "0x0000000000000000000000000000000000000000";
@@ -131,6 +132,16 @@ function App() {
           console.log(isAUser.debt);
           if (isAUser.debt != 0) {
             setIsAvailable("Pay your due before renting again!");
+          }
+        }
+        // adjust ride time
+        if (isAUser.rentedCarId != 0) {
+          if (isAUser.end != 0) {
+            setRideMins(Math.floor((isAUser.end - isAUser.start) / 60));
+          } else {
+            setRideMins(
+              Math.floor((Math.floor(Date.now() / 1000) - isAUser.start) / 60)
+            );
           }
         }
       }
@@ -196,7 +207,7 @@ function App() {
                 <InfoBox label="BNB Due" number={due} icon={<GiToken />} />
                 <InfoBox
                   label="Ride Minutes"
-                  number="0"
+                  number={rideMins}
                   icon={<BiTimeFive />}
                 />
                 <div className="grid place-items-center">
@@ -211,7 +222,7 @@ function App() {
               holder=" Credit balance"
               label="Credit your account"
             />
-            <DueComponent label="Pay your due" onClick={() => makePayment()} />
+            <DueComponent label="Pay your due" />
           </div>
           {/* Car Section */}
           <div className="grid md:grid-flow-col gap-4 gap-y-12 justify-evenly mt-24 pb-24">
@@ -224,6 +235,7 @@ function App() {
                       saleFee={car.saleFee}
                       image={car.imgUrl}
                       id={car.id}
+                      name={car.name}
                     />
                   </div>
                 ))
