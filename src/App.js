@@ -90,9 +90,9 @@ function App() {
         // get the owner
         let owner = await getOwner();
         // see if the user is the owner
-        console.log(`admin: ${owner} and user ${address}`);
-        if (address === owner) {
-          setOwner(true);
+        console.log(`admin: ${owner.toLowerCase()} and user ${address}`);
+        if (address === owner.toLowerCase()) {
+          setIsAdmin(true);
         }
         // get cars
         let carArray = await getAllCars();
@@ -157,17 +157,14 @@ function App() {
           <div className="mt-12">
             <TopLabel userName={userName} />
           </div>
-          {/* <div className="grid place-content-center mt-8">
+          <div className="grid place-content-center mt-8">
             {isAdmin && (
               <GradientButton
                 // onClick={() => setShowModal(true)}
-                onClick={() => {
-                  addCar();
-                }}
                 title="Admin Actions"
               />
             )}
-          </div> */}
+          </div>
           {/* Data Section */}
           <div className=" mx-auto grid place-content-center  mt-12">
             <div className="flex flex-row items-center">
