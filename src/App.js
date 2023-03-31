@@ -1,7 +1,6 @@
 // Css
 import "./App.css";
 // Local Components
-import bgImg from "./assets/background.jpg";
 import InfoBox from "./components/InfoBox";
 import TopLabel from "./components/TopLabel";
 import Status from "./components/Status";
@@ -38,38 +37,12 @@ import {
   login,
 } from "./Web3Client";
 // Assets
-import car1 from "./assets/car1.jpg";
-import car2 from "./assets/car2.jpg";
-import car3 from "./assets/car3.jpg";
+
 // External exports
 import { BiWalletAlt, BiTimeFive } from "react-icons/bi";
 import { GiToken } from "react-icons/gi";
 import { useState, useEffect } from "react";
 import Web3 from "web3";
-
-const DUMMY_CARS = [
-  {
-    id: "1",
-    isActive: true,
-    carFee: "BNB 50",
-    saleFee: "BNB 100",
-    carImg: car1,
-  },
-  {
-    id: "2",
-    isActive: false,
-    carFee: "BNB 45",
-    saleFee: "BNB 95",
-    carImg: car2,
-  },
-  {
-    id: "3",
-    isActive: true,
-    carFee: "BNB 65",
-    saleFee: "BNB 85",
-    carImg: car3,
-  },
-];
 
 function App() {
   const [showModal, setShowModal] = useState(false);
@@ -226,30 +199,24 @@ function App() {
           </div>
           {/* Car Section */}
           <div className="grid md:grid-flow-col gap-4 gap-y-12 justify-evenly mt-24 pb-24">
-            {cars.length > 0
-              ? cars.map((car) => (
-                  <div key={car.id}>
-                    <CarComponent
-                      isActive={car.availableForRent}
-                      carFee={car.rentFee}
-                      saleFee={car.saleFee}
-                      image={car.imgUrl}
-                      id={car.id}
-                      name={car.name}
-                    />
-                  </div>
-                ))
-              : DUMMY_CARS.map((car) => (
-                  <div key={car.carId}>
-                    <CarComponent
-                      isActive={car.isActive}
-                      carFee={car.carFee}
-                      saleFee={car.saleFee}
-                      image={car.carImg}
-                      id={car.id}
-                    />
-                  </div>
-                ))}
+            {cars.length > 0 ? (
+              cars.map((car) => (
+                <div key={car.id}>
+                  <CarComponent
+                    isActive={car.availableForRent}
+                    carFee={car.rentFee}
+                    saleFee={car.saleFee}
+                    image={car.imgUrl}
+                    id={car.id}
+                    name={car.name}
+                  />
+                </div>
+              ))
+            ) : (
+              <div>
+                <div className="text-white text-4xl mb-60">LOADING CARS...</div>
+              </div>
+            )}
           </div>
         </div>
       ) : (
