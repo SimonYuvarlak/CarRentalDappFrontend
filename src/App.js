@@ -66,14 +66,12 @@ function App() {
   const [due, setDue] = useState(0);
   const [isAvailable, setIsAvailable] = useState("Can Rent");
   const [rideMins, setRideMins] = useState(0);
-  // const [car, setCar] = useState({ id: 0, name: '', imgUrl: '', availableforRent: false, rentFee: 0, saleFee: 0 });
 
   const emptyAddress = "0x0000000000000000000000000000000000000000";
 
   useEffect(() => {
     const handleInit = async () => {
       let isAUser = await login();
-      console.warn(isAUser);
       // If the user exists
       if (isAUser.address != emptyAddress) {
         setLoggedIn(true); //login user
@@ -90,7 +88,6 @@ function App() {
         // get the owner
         let owner = await getOwner();
         // see if the user is the owner
-        console.log(`admin: ${owner.toLowerCase()} and user ${address}`);
         if (address === owner.toLowerCase()) {
           setIsAdmin(true);
         }
@@ -102,7 +99,6 @@ function App() {
           let rentedCar = await getCar(isAUser.rentedCarId);
           setIsAvailable(`Rented ${rentedCar.name} - ${rentedCar.id}`);
         } else {
-          console.log(isAUser.debt);
           if (isAUser.debt != 0) {
             setIsAvailable("Pay your due before renting again!");
           }
@@ -160,7 +156,7 @@ function App() {
           <div className="grid place-content-center mt-8">
             {isAdmin && (
               <GradientButton
-                // onClick={() => setShowModal(true)}
+                onClick={() => setShowModal(true)}
                 title="Admin Actions"
               />
             )}
@@ -251,7 +247,6 @@ function App() {
           <AdminActions />
         </Modal>
       )}
-      <div id="modal-root"></div>
     </div>
   );
 }

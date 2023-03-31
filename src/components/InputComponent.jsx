@@ -5,13 +5,16 @@ const InputComponent = (props) => {
   const [balance, setBalance] = useState("");
 
   const creditAccount = () => {
-    console.log("adding token to your account");
+    alert(
+      "adding " +
+        balance +
+        " token to your account, this can take couple of seconds..."
+    );
     deposit(balance);
   };
 
   const handleBalanceChange = (event) => {
     setBalance(event.target.value);
-    console.log(event.target.value);
   };
 
   return (
