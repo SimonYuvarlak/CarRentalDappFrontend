@@ -1,5 +1,5 @@
 import { React, useEffect, useState } from "react";
-import { getUserAddress} from "../Web3Client";
+import { getUserAddress } from "../Web3Client";
 
 const Header = (props) => {
   const [copied, setCopied] = useState(false);
@@ -9,13 +9,13 @@ const Header = (props) => {
     const getAddress = async () => {
       let address = await getUserAddress();
       setUserAddress(address);
-    }
+    };
     getAddress();
   }, []);
 
   const handleCopy = () => {
     navigator.clipboard
-      .writeText(props.address)
+      .writeText(userAddress)
       .then(() => {
         console.log("Text copied to clipboard");
         setCopied(true);
@@ -48,19 +48,20 @@ const Header = (props) => {
     }
   }
 
-
   return (
     <header className="sticky top-0 z-40  backdrop-blur p-4 flex justify-between items-center">
       <div className="ml-4 text-white font-bold text-lg">Car Rental App</div>
-      {props.loggedIn ? <div
-        className="text-white hover:text-black hover:cursor-pointer font-bold text-lg tooltip tooltipstered"
-        onClick={handleCopy}
-      >
-        {!copied ? short_address(userAddress) : "Copied to clipboard"}
-      </div> : (
-      <div className="text-lrg text-white font-semibold grid-flow-col grid gap-4">
-        <h3 className="hover:cursor-pointer">0x000...000</h3>
-      </div>
+      {props.loggedIn ? (
+        <div
+          className="text-white hover:text-black hover:cursor-pointer font-bold text-lg tooltip tooltipstered"
+          onClick={handleCopy}
+        >
+          {!copied ? short_address(userAddress) : "Copied to clipboard"}
+        </div>
+      ) : (
+        <div className="text-lrg text-white font-semibold grid-flow-col grid gap-4">
+          <h3 className="hover:cursor-pointer">0x000...000</h3>
+        </div>
       )}
     </header>
   );
