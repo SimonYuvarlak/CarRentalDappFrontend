@@ -166,7 +166,7 @@ function App() {
           );
         }
       }
-      if (rideMins === "...") {
+      if (rideMins === "..." || rideMins[0] === "-") {
         setRideMins("0");
       }
       // update user status
