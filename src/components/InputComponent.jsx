@@ -4,13 +4,15 @@ import { deposit } from "../Web3Client";
 const InputComponent = (props) => {
   const [balance, setBalance] = useState("");
 
-  const creditAccount = () => {
+  const creditAccount = async () => {
     alert(
       "adding " +
         balance +
         " token to your account, this can take couple of seconds..."
     );
-    deposit(balance);
+    props.funcBefore(1);
+    await deposit(balance);
+    props.funcAfter();
   };
 
   const handleBalanceChange = (event) => {

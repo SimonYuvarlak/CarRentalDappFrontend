@@ -1,7 +1,15 @@
-import { React, useState } from "react";
+import { React } from "react";
 import { makePayment } from "../Web3Client";
 
 const DueComponent = (props) => {
+  const paymentClicked = async () => {
+    props.funcBefore(1);
+    props.funcBefore(2);
+    props.funcBefore(4);
+    await makePayment();
+    props.funcAfter();
+  };
+
   return (
     <div className=" p-2">
       <div className="grid md:grid-flow- items-center px-8 py-4">
@@ -10,7 +18,7 @@ const DueComponent = (props) => {
         </p>
         <button
           onClick={() => {
-            makePayment();
+            paymentClicked();
           }}
           className="bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-r hover:from-sky-500 hover:to-indigo-500 py-2 w-40 rounded-lg my-4 m-auto hover:bg-green-500"
         >

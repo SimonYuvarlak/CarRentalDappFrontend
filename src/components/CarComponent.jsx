@@ -1,8 +1,21 @@
 import React from "react";
 import { checkOut, checkIn } from "../Web3Client";
-import Web3 from "web3";
 
 const CarComponent = (props) => {
+  const checkOutCar = async () => {
+    props.funcBefore(4);
+    await checkOut(props.id);
+    props.funcAfter();
+  };
+
+  const checkInCar = async () => {
+    props.funcBefore(2);
+    props.funcBefore(3);
+    props.funcBefore(4);
+    await checkIn(props.id);
+    props.funcAfter();
+  };
+
   return (
     <div className="border-md border-black flex flex-col">
       <img src={props.image} alt="car image" className="w-80 h-60 rounded-md" />
@@ -23,7 +36,7 @@ const CarComponent = (props) => {
       </div>
       <div className="flex flex-row justify-evenly mt-10">
         <button
-          onClick={() => checkOut(props.id)}
+          onClick={() => checkOutCar()}
           className="p-4 bg-gradient-to-r  from-purple-500 to-pink-500 hover:bg-gradient-to-r hover:from-sky-500 hover:to-indigo-500 py-2  rounded-lg  hover:bg-green-500"
         >
           <span className="text-white text-sm text-center p-4 font-semibold">
@@ -31,7 +44,7 @@ const CarComponent = (props) => {
           </span>
         </button>
         <button
-          onClick={() => checkIn(props.id)}
+          onClick={() => checkInCar(props.id)}
           className="p-4 bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-r hover:from-sky-500 hover:to-indigo-500 py-2  rounded-lg  hover:bg-green-500"
         >
           <span className="text-white text-sm p-4 font-semibold">Check in</span>

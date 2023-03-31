@@ -62,10 +62,10 @@ function App() {
   const [name, setName] = useState({});
   const [lastName, setLastName] = useState({});
   const [isAdmin, setIsAdmin] = useState(false);
-  const [userCredit, setUserCredit] = useState(0);
-  const [due, setDue] = useState(0);
+  const [userCredit, setUserCredit] = useState("0");
+  const [due, setDue] = useState("0");
   const [isAvailable, setIsAvailable] = useState("Can Rent");
-  const [rideMins, setRideMins] = useState(0);
+  const [rideMins, setRideMins] = useState("0");
 
   const emptyAddress = "0x0000000000000000000000000000000000000000";
 
@@ -76,9 +76,11 @@ function App() {
       if (isAUser.address != emptyAddress) {
         setLoggedIn(true); //login user
         // set user credits
-        setUserCredit(Web3.utils.fromWei(String(isAUser.balance), "ether"));
+        setUserCredit(
+          Web3.utils.fromWei(String(isAUser.balance), "ether").toString()
+        );
         // set user due
-        setDue(Web3.utils.fromWei(String(isAUser.debt), "ether"));
+        setDue(Web3.utils.fromWei(String(isAUser.debt), "ether").toString());
         // set user name
         setUserName(isAUser.name);
         // set the user
@@ -106,10 +108,14 @@ function App() {
         // adjust ride time
         if (isAUser.rentedCarId != 0) {
           if (isAUser.end != 0) {
-            setRideMins(Math.floor((isAUser.end - isAUser.start) / 60));
+            setRideMins(
+              Math.floor((isAUser.end - isAUser.start) / 60).toString()
+            );
           } else {
             setRideMins(
-              Math.floor((Math.floor(Date.now() / 1000) - isAUser.start) / 60)
+              Math.floor(
+                (Math.floor(Date.now() / 1000) - isAUser.start) / 60
+              ).toString()
             );
           }
         }
@@ -118,6 +124,67 @@ function App() {
 
     handleInit();
   }, []);
+
+  const updateLoading = (data) => {
+    switch (data) {
+      case 1:
+        setUserCredit("...");
+        break;
+      case 2:
+        setDue("...");
+        break;
+      case 3:
+        setRideMins("...");
+        break;
+      case 4:
+        setIsAvailable("...");
+        break;
+      default:
+        console.log("invalid data number");
+        break;
+    }
+  };
+
+  const updateData = async () => {
+    let user = await login();
+    if (user.address != emptyAddress) {
+      // set user credits
+      setUserCredit(
+        Web3.utils.fromWei(String(user.balance), "ether").toString()
+      );
+      // set user due
+      setDue(Web3.utils.fromWei(String(user.debt), "ether").toString());
+      // set ride mins
+      if (user.rentedCarId !== 0) {
+        if (user.end !== 0) {
+          setRideMins(Math.floor((user.end - user.start) / 60).toString());
+        } else {
+          setRideMins(
+            Math.floor(
+              (Math.floor(Date.now() / 1000) - user.start) / 60
+            ).toString()
+          );
+        }
+      }
+      if (rideMins === "...") {
+        setRideMins("0");
+      }
+      // update user status
+      if (user.rentedCarId && user.rentedCarId != 0) {
+        let rentedCar = await getCar(user.rentedCarId);
+        setIsAvailable(`Rented ${rentedCar.name} - ${rentedCar.id}`);
+      } else {
+        if (user.debt != 0) {
+          setIsAvailable("Pay your due before renting again!");
+        } else {
+          setIsAvailable("Can Rent");
+        }
+      }
+      // get cars
+      let carArray = await getAllCars();
+      await getCars(carArray);
+    }
+  };
 
   const getCars = async (cars) => {
     let carArr = [];
@@ -187,8 +254,14 @@ function App() {
             <InputComponent
               holder=" Credit balance"
               label="Credit your account"
+              funcBefore={updateLoading}
+              funcAfter={updateData}
             />
-            <DueComponent label="Pay your due" />
+            <DueComponent
+              label="Pay your due"
+              funcBefore={updateLoading}
+              funcAfter={updateData}
+            />
           </div>
           {/* Car Section */}
           <div className="grid md:grid-flow-col gap-4 gap-y-12 justify-evenly mt-24 pb-24">
@@ -202,6 +275,8 @@ function App() {
                     image={car.imgUrl}
                     id={car.id}
                     name={car.name}
+                    funcBefore={updateLoading}
+                    funcAfter={updateData}
                   />
                 </div>
               ))
