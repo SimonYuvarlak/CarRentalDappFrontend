@@ -1,10 +1,37 @@
-import React from "react";
+import { React, useState } from "react";
 import { useForm } from "react-hook-form";
 import GradientButton from "./GradientButton";
+import { activateCar, deActivateCar, addCar, setOwner } from "../../Web3Client";
 const UserInput = ({ label, name, placeholder }) => {
-  const { register, handleSubmit, errors } = useForm();
+  const { handleSubmit } = useForm();
 
-  const onSubmit = (data) => {};
+  const [item, setItem] = useState("");
+
+  const onSubmit = async () => {
+    switch (name) {
+      case "activeCarId":
+        await activateCar(item);
+        break;
+      case "deactivateCarId":
+        await deActivateCar(item);
+        break;
+      case "addCar":
+        const params = item.split(", ");
+        await addCar(params[0], params[1], params[2], params[3], params[4]);
+        break;
+      case "setOwner":
+        await setOwner(item);
+        break;
+      default:
+        console.warn("unrecognized field name");
+        break;
+    }
+  };
+
+  const handleChange = (event) => {
+    setItem(event.target.value);
+  };
+
   return (
     <form
       className="border-2 shadow-lg rounded-md p-4 mt-4"
@@ -16,7 +43,7 @@ const UserInput = ({ label, name, placeholder }) => {
         <input
           className=" border-2 rounded-md p-2 mr-2"
           placeholder={placeholder}
-          {...register(name)}
+          onChange={handleChange}
         />
         <GradientButton title="Submit" />
       </div>

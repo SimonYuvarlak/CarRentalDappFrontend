@@ -99,7 +99,7 @@ export const deActivateCar = async (id) => {
     await init();
   }
   let res = await renterContract.methods
-    .deActivateCar(id)
+    .deactivateCar(id)
     .send({ from: selectedAccount });
   return res;
 };
